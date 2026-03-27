@@ -21,6 +21,7 @@ dependencies = [
 
 [project.optional-dependencies]
 x402 = ["revettr[x402]>=0.2.0"]
+dev = ["pytest>=7.0"]
 
 [project.urls]
 Homepage = "https://github.com/alexlawson/crewai-revettr"

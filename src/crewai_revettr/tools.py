@@ -69,44 +69,55 @@ class RevettrScoreTool(BaseTool):
 
         from revettr import Revettr
 
-        wallet_key = os.getenv("REVETTR_WALLET_KEY")
-        client_kwargs: dict[str, Any] = {}
-        if wallet_key:
-            client_kwargs["wallet_key"] = wallet_key
+        try:
+            wallet_key = os.getenv("REVETTR_WALLET_KEY")
+            client_kwargs: dict[str, Any] = {}
+            if wallet_key:
+                client_kwargs["wallet_key"] = wallet_key
 
-        client = Revettr(**client_kwargs)
+            client = Revettr(**client_kwargs)
 
-        score_kwargs: dict[str, Any] = {}
-        if domain:
-            score_kwargs["domain"] = domain
-        if ip:
-            score_kwargs["ip"] = ip
-        if wallet_address:
-            score_kwargs["wallet_address"] = wallet_address
-            score_kwargs["chain"] = chain
-        if company_name:
-            score_kwargs["company_name"] = company_name
+            score_kwargs: dict[str, Any] = {}
+            if domain:
+                score_kwargs["domain"] = domain
+            if ip:
+                score_kwargs["ip"] = ip
+            if wallet_address:
+                score_kwargs["wallet_address"] = wallet_address
+                score_kwargs["chain"] = chain
+            if company_name:
+                score_kwargs["company_name"] = company_name
 
-        result = client.score(**score_kwargs)
+            result = client.score(**score_kwargs)
 
-        lines = [
-            "Revettr Counterparty Risk Score",
-            "=" * 40,
-            f"Score: {result.score}/100",
-            f"Tier: {result.tier}",
-            f"Confidence: {result.confidence}",
-        ]
+            lines = [
+                "Revettr Counterparty Risk Score",
+                "=" * 40,
+                f"Score: {result.score}/100",
+                f"Tier: {result.tier}",
+                f"Confidence: {result.confidence}",
+            ]
 
-        if hasattr(result, "flags") and result.flags:
-            lines.append("\nFlags:")
-            for flag in result.flags:
-                lines.append(f"  - {flag}")
+            if hasattr(result, "flags") and result.flags:
+                lines.append("\nFlags:")
+                for flag in result.flags:
+                    lines.append(f"  - {flag}")
 
-        if hasattr(result, "signals") and result.signals:
-            lines.append("\nSignal Breakdown:")
-            for signal in result.signals:
-                name = getattr(signal, "name", str(signal))
-                score = getattr(signal, "score", "N/A")
-                lines.append(f"  {name}: {score}")
+            if hasattr(result, "signals") and result.signals:
+                lines.append("\nSignal Breakdown:")
+                for signal in result.signals:
+                    name = getattr(signal, "name", str(signal))
+                    score = getattr(signal, "score", "N/A")
+                    lines.append(f"  {name}: {score}")
 
-        return "\n".join(lines)
+            return "\n".join(lines)
+
+        except Exception as e:
+            error_msg = str(e)
+            if "402" in error_msg:
+                return (
+                    f"Payment required: Set REVETTR_WALLET_KEY environment variable "
+                    f"with an EVM private key funded with USDC on Base. "
+                    f"Cost: $0.01 per score. Details: {error_msg}"
+                )
+            return f"Error scoring counterparty: {error_msg}"
