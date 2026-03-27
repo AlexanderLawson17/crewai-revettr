@@ -1,0 +1,31 @@
+[project]
+name = "crewai-revettr"
+version = "0.1.0"
+description = "CrewAI tool for counterparty risk scoring in agentic commerce via Revettr."
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Alexander Lawson" }]
+readme = "README.md"
+keywords = ["crewai", "revettr", "risk-scoring", "x402", "agentic-commerce"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "crewai",
+    "revettr>=0.2.0",
+]
+
+[project.optional-dependencies]
+x402 = ["revettr[x402]>=0.2.0"]
+
+[project.urls]
+Homepage = "https://github.com/alexlawson/crewai-revettr"
+Documentation = "https://revettr.com"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
