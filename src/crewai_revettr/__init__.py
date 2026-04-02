@@ -1,3 +1,13 @@
-from crewai_revettr.tools import RevettrScoreTool
+from crewai_revettr.tools import (
+    RevettrExplainTool,
+    RevettrHealthTool,
+    RevettrIsSafeTool,
+    RevettrScoreTool,
+)
 
-__all__ = ["RevettrScoreTool"]
+__all__ = [
+    "RevettrExplainTool",
+    "RevettrHealthTool",
+    "RevettrIsSafeTool",
+    "RevettrScoreTool",
+]
